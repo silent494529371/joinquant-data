@@ -86,7 +86,7 @@ def downloadAllMinuteBar():
 
     #symbols_df = jqdatasdk.get_all_securities(types=['futures'], date=today)
     symbols_df = jqdatasdk.get_all_securities(types=['futures'], date=today)
-    symbols_df = jqdatasdk.get_dominant_future('AU', '2018-09-30') #jinsong
+    #symbols_df = jqdatasdk.get_dominant_future('AU', '2018-09-30') #jinsong
     #downMinuteBarBySymbol(symbols_df, row, str(today), str(trade_date_list[-2]))
 
     for index, row in symbols_df.iterrows():

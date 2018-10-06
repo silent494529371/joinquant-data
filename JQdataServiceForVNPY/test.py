@@ -21,10 +21,10 @@ MONGO_HOST = setting['MONGO_HOST']
 MONGO_PORT = setting['MONGO_PORT']
 JQDATA_USER = setting['JQDATA_USER']
 JQDATA_PASSWORD = setting['JQDATA_PASSWORD']
-Five_MIN_DB_NAME = 'VnTrader_5Min_Db'
+MINUTE_DB_NAME = 'VnTrader_1Min_Db'
 
 mc = MongoClient(MONGO_HOST, MONGO_PORT)        # Mongo连接
-db = mc[Five_MIN_DB_NAME]                         # 数据库
+db = mc[MINUTE_DB_NAME]                         # 数据库
 
 
 
@@ -45,7 +45,7 @@ def generateVtBar(symbol, time, d):
     
     return bar
 
-#----------------------------------------------------------------------
+#---------------------------------------------------------------------- 
 def downMinuteBarBySymbol(symbol, info, today, pre_trade_day):
     start = time()
 
@@ -57,8 +57,10 @@ def downMinuteBarBySymbol(symbol, info, today, pre_trade_day):
     #skip_paused=False get_price(security, start_date=None, end_date=None, frequency='daily', 
     #fields=None, skip_paused=False, fq='pre', count=None)
     #minute_df = jqdatasdk.get_price(symbol, start_date=pre_trade_day + " 20:30:00",end_date=today + " 20:30:00", frequency='5minute')
-    minute_df = jqdatasdk.get_price(symbol, start_date=pre_trade_day + " 20:30:00",end_date=today + " 20:30:00", frequency='minute',skip_paused=True)
-
+    #minute_df = jqdatasdk.get_price(symbol, start_date=pre_trade_day + " 20:30:00",end_date=today + " 20:30:00", frequency='minute',skip_paused=True)
+    minute_df=jqdatasdk.get_price(symbol, start_date='2016-01-01', end_date='2018-10-01', frequency='minute', skip_paused=True) 
+    #fields=['open': 'Open', 'close': 'Close', 'high': 'High', 'low': 'Low','volume': 'TotalVolume'],
+    #self.df_day['index_number']=np.arange(len(self.df_day.index.date))
     # 将数据传入到数据队列当中
     for index, row in minute_df.iterrows():
         bar = generateVtBar(symbol_name, str(index), row)
@@ -110,7 +112,7 @@ def downloadDonmainMinuteBar():
 
     #symbols_df = jqdatasdk.get_all_securities(types=['futures'], date=today)
     symbols_df = jqdatasdk.get_dominant_future('AG', '2018-09-30') #jinsong
-    downMinuteBarBySymbol(symbols_df,  {'name': 'AG1812'}, str(today), str(trade_date_list[-2]))
+    downMinuteBarBySymbol("RB9999.XSGE",  {'name': 'RB9999.XSGE'.split('.')[0]}, str(today), str(trade_date_list[-2]))
 
     print('-' * 50)
     print(u'合约分钟线数据下载完成')
